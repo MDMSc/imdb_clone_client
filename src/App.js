@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
+import Home from "./components/Home";
+import FormComponent from "./components/FormComponent";
+import LoginForm from "./components/LoginForm";
+import { useSelector } from "react-redux";
 
 function App() {
+  const isAuth = Boolean(useSelector((state) => state.token));
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        <Route
+          path="/"
+          element={isAuth ? <Navigate to="/home" /> : <LoginForm />}
+          exact
+        />
+        <Route path="/home" element={isAuth ? <Home /> : <Navigate to="/" />} />
+        <Route
+          path="/add-movie"
+          element={isAuth ? <FormComponent type="add" /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/edit-movie/:_id"
+          element={isAuth ? <FormComponent type="edit" /> : <Navigate to="/" />}
+        />
+      </Routes>
     </div>
   );
 }
